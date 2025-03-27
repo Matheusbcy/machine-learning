@@ -1,0 +1,53 @@
+import pandas as pd
+import numpy as np
+import seaborn as sns  # Criação de graficos
+import matplotlib.pyplot as plt  # Criação de graficos
+import plotly.express as px  # Criação de graficos
+
+# Inicilizando Base de dados
+base_credits = pd.read_csv("content/credit_data.csv")
+#print(base_credits.describe())  # Descrição estatística da base de dados
+#print(base_credits[base_credits["income"] >= 69995.685578])  # Exibe os dados com renda maior ou igual a 69995.685578
+# print(base_credits[base_credits["loan"] <= 1.377630])  # Exibe os dados com empréstimo menor ou igual a 1.377630
+
+# ---------  TRATAMENTO DE ERROS ----------------------------------
+# 1- apagar a coluna inteira (de todos os registros)
+base_credits2 = base_credits.drop('age', axis= 1) # Apaga a coluna idade
+
+# 2- Apagar somente os registros com idade negativa
+base_credits3 = base_credits.drop(base_credits[base_credits["age"] < 0].index) # Apaga os registros com idade negativa
+
+# 3 - Preencher os valores inconsistentes manualmente
+
+# 4 - Preencher os valores faltando com a média da coluna
+print(base_credits['age'][base_credits['age'] > 0].mean()) # Média da idade
+base_credits.loc[base_credits['age'] < 0, 'age'] = 40 # Preenche os valores negativos com a média da idade
+base_credits.loc[base_credits['age'] < 0] # Exibe os dados com idade negativa
+
+# -------- FIM DO TRATAMENTO DE ERROS ---------------------------
+
+# ------- TRATAMENTO DE VALORES FALTANTES ------------------
+
+base_credits.isnull().sum() # Exibe a quantidade de valores faltantes em cada coluna
+#print(base_credits.loc[pd.isnull(base_credits["age"])]) # Exibe os dados com idade faltando
+base_credits['age'].fillna(base_credits['age'].mean(), inplace=True) # Preenche os valores faltantes com a média da idade
+print(base_credits.loc[base_credits['clientid'].isin([29, 31, 32])]) # Exibe os dados com idade faltando
+
+# -------- FIM TRATAMENTO DE VALORES FALTANTES ------------------
+
+
+# CRIANDO GRAFICOS USANDO O PLOTLY ------------------
+
+fig = px.histogram(base_credits, x="default", title="Gráfico de Contagem")
+# fig.show()
+fig_age = px.histogram(base_credits, x="age", title="Histograma da Idade")
+# fig_age.show()
+fig_income = px.histogram(base_credits, x="income", title="Histograma do Emprestimo")
+# fig_income.show()
+fig_loan = px.histogram(base_credits, x="loan", title="Histograma da Renda")
+# fig_loan.show()
+
+grafico = px.scatter_matrix(
+    base_credits, dimensions=["age", "income", "loan"], color="default"
+)
+# grafico.show()
