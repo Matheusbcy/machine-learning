@@ -1,0 +1,10 @@
+import pandas as pd
+import numpy as np
+import seaborn as sns  # Criação de graficos
+import matplotlib.pyplot as plt  # Criação de graficos
+import plotly.express as px  # Criação de graficos
+from sklearn.preprocessing import StandardScaler  # Normalização dos dados
+
+base_census = pd.read_csv("content/census.csv")
+
+print(base_census.describe())
